@@ -23,11 +23,8 @@ RUN docker-php-ext-install pdo_mysql
 
 RUN apt-get update \
   && apt-get install -y postgresql postgresql-contrib \
-  && apt-get install sudo \
   && apt-get install -y libpq-dev \
-  && docker-php-ext-install pdo pdo_pgsql \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && docker-php-ext-install pdo pdo_pgsql
 
 RUN set -ex \
   && apk --no-cache add \
