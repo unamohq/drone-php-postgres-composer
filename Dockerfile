@@ -19,12 +19,8 @@ RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
 # Install PDO MySQL driver
 RUN docker-php-ext-install pdo_mysql
 
-# Install Postgres & PDO Postgres driver
-
-RUN apt-get update \
-  && apt-get install -y postgresql postgresql-contrib \
-  && apt-get install -y libpq-dev \
-  && docker-php-ext-install pdo pdo_pgsql
+# Install PDO Postgres driver
+RUN docker-php-ext-install pdo pdo_pgsql
 
 RUN set -ex \
   && apk --no-cache add \
