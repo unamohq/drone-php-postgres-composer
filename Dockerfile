@@ -19,12 +19,19 @@ RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
 # Install PDO MySQL driver
 RUN docker-php-ext-install pdo_mysql
 
-# Install PDO Postgres driver
+# Install Postgres & PDO Postgres driver
+
+RUN apt-get update \
+  && apt-get install -y postgresql postgresql-contrib \
+  && apt-get install sudo \
+  && apt-get install -y libpq-dev \
+  && docker-php-ext-install pdo pdo_pgsql \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN set -ex \
   && apk --no-cache add \
     postgresql-dev
-
-RUN docker-php-ext-install pdo pdo_pgsql
 
 # Install XDebug
 RUN pecl install xdebug \
