@@ -16,6 +16,9 @@ ENV IGBINARY_VERSION 2.0.4
 RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && apk add --no-cache git libuv gmp libstdc++ mariadb-client python py-pip
 
+# Install zip
+RUN docker-php-ext-install zip
+
 # Install PDO MySQL driver
 RUN docker-php-ext-install pdo_mysql
 
