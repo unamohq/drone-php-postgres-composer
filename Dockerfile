@@ -8,7 +8,7 @@ ENV BUILD_DEPS \
                 make
 
 RUN apk update  && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
-    && apk add --no-cache zlib-dev mariadb-client python
+    && apk add --no-cache zlib-dev mariadb-client python git
 
 # Install ast
 RUN pecl install ast \

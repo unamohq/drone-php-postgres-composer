@@ -11,3 +11,4 @@ Based on official php:7.1.14-alpine image. Extras:
 - ast extension
 - MariaDB client
 - Python
+- git
