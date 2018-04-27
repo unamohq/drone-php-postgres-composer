@@ -1,6 +1,6 @@
 # drone-php-postgres-composer
 
-Based on official php:7.1.16 image. Extras:
+Based on official php:7.1.16-alpine image. Extras:
 
 - PDO MySQL driver
 - PDO PostgreSQL driver
