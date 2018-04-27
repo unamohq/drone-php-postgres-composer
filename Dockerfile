@@ -1,4 +1,4 @@
-FROM php:7.1.14-alpine
+FROM php:7.1.16
 
 ENV BUILD_DEPS \
                 cmake \
