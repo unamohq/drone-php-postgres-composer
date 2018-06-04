@@ -1,4 +1,4 @@
-FROM php:7.1.17-alpine
+FROM php:7.2.6-cli-alpine3.7
 
 ENV BUILD_DEPS \
                 cmake \
@@ -68,3 +68,4 @@ RUN apk del .build-deps
 
 ENTRYPOINT ["docker-php-entrypoint"]
 CMD ["php", "-a"]
+
