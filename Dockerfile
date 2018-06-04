@@ -1,4 +1,4 @@
-FROM php:7.2.6-cli-alpine3.7
+FROM php:7.2.6-alpine3.7
 
 ENV BUILD_DEPS \
                 cmake \
