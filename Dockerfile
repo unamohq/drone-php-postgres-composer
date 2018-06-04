@@ -9,7 +9,7 @@ ENV BUILD_DEPS \
 
 RUN apt-get update
 RUN apt-get -yq install $BUILD_DEPS
-RUN apt-get -yq install zlib1g-dev mariadb-client python git
+RUN apt-get -yq install zlib1g-dev mariadb-client python git netcat
 
 # Install ast
 RUN pecl install ast \
