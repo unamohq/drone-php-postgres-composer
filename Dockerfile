@@ -1,4 +1,4 @@
-FROM php:7.2.6-alpine3.7
+FROM php:7.2.6-cli-stretch
 
 ENV BUILD_DEPS \
                 cmake \
@@ -7,8 +7,9 @@ ENV BUILD_DEPS \
                 gcc \
                 make
 
-RUN apk update  && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
-    && apk add --no-cache zlib-dev mariadb-client python git
+RUN apt-get update
+RUN apt-get -yq install $BUILD_DEPS
+RUN apt-get -yq install zlib1g-dev mariadb-client python git
 
 # Install ast
 RUN pecl install ast \
@@ -25,7 +26,7 @@ RUN docker-php-ext-install pdo_mysql \
     && php -m | grep pdo_mysql
 
 # Install PostgreSQL libs
-RUN apk add --no-cache postgresql-dev
+RUN apt-get -yq install libpq-dev
 
 # Install PDO PostgreSQL driver
 RUN docker-php-ext-install pdo_pgsql \
@@ -64,7 +65,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');"
 
 # Remove builddeps
-RUN apk del .build-deps
+RUN apt-get -yq autoremove $BUILD_DEPS
 
 ENTRYPOINT ["docker-php-entrypoint"]
 CMD ["php", "-a"]
