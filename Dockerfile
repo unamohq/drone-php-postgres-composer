@@ -15,6 +15,12 @@ RUN pecl install ast \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable ast \
     && php -m | grep ast
+    
+# Install v8js
+RUN pecl install v8js \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable v8js \
+    && php -m | grep ast
 
 # Install zip
 RUN docker-php-ext-install zip \
