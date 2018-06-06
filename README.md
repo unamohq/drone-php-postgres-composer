@@ -9,6 +9,7 @@ Based on official php:7.2.6-alpine3.7 image. Extras:
 - igbinary extension
 - xdebug extension
 - ast extension
+- v8js extension
 - MariaDB client
 - Python
 - git
