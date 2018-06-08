@@ -1,5 +1,9 @@
 FROM php:7.2.6-alpine3.7
 
+LABEL repository.hub="alexmasterov/alpine-libv8:6.8" \
+      repository.url="https://github.com/AlexMasterov/dockerfiles" \
+      maintainer="Alex Masterov <alex.masterow@gmail.com>"
+
 ARG V8_VERSION=6.8.104
 ARG V8_DIR=/usr/local/v8
 
@@ -18,9 +22,10 @@ ARG V8_SOURCE=https://chromium.googlesource.com/v8/v8/+archive/${V8_VERSION}.tar
 
 ENV V8_VERSION=${V8_VERSION} \
     V8_DIR=${V8_DIR}
-    
+
 # libbstdc++ for v8js    
 RUN apk add --no-cache libstdc++
+
 RUN set -x \
   && apk add --update --virtual .v8-build-dependencies \
     curl \
@@ -34,10 +39,8 @@ RUN set -x \
     python \
     tar \
     xz \
-  && : "---------- V8 ----------" \
   && mkdir -p /tmp/v8 \
   && curl -fSL --connect-timeout 30 ${V8_SOURCE} | tar xmz -C /tmp/v8 \
-  && : "---------- Dependencies ----------" \
   && DEPS=" \
     chromium/buildtools.git@${BUILDTOOLS_COMMIT}:buildtools; \
     chromium/src/build.git@${BUILD_COMMIT}:build; \
@@ -63,15 +66,12 @@ RUN set -x \
       & [ "${DEPS}" = "${dep}" ] && DEPS='' || DEPS="${DEPS#*;}"; \
     done; \
     wait \
-  && : "---------- Downloads the current stable Linux sysroot ----------" \
   && /tmp/v8/build/linux/sysroot_scripts/install-sysroot.py --arch=amd64 \
-  && : "---------- Proper GN ----------" \
   && apk add --virtual .gn-runtime-dependencies \
     libevent \
     libexecinfo \
     libstdc++ \
   && curl -fSL --connect-timeout 30 ${GN_SOURCE} | tar xmz -C /tmp/v8/buildtools/linux64/ \
-  && : "---------- Build instructions ----------" \
   && cd /tmp/v8 \
   && ./tools/dev/v8gen.py \
     x64.release \
@@ -92,14 +92,11 @@ RUN set -x \
       use_allocator_shim=false \
       treat_warnings_as_errors=false \
       symbol_level=0 \
-  && : "---------- Build ----------" \
   && ninja d8 -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN) \
-  && : "---------- Extract shared libraries ----------" \
   && mkdir -p ${V8_DIR}/include ${V8_DIR}/lib \
   && cp -R /tmp/v8/include/* ${V8_DIR}/include/ \
   && (cd /tmp/v8/out.gn/x64.release; \
       cp lib*.so icudtl.dat ${V8_DIR}/lib/) \
-  && : "---------- Removing build dependencies, clean temporary files ----------" \
   && apk del .v8-build-dependencies .gn-runtime-dependencies \
   && rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
@@ -137,6 +134,10 @@ RUN mkdir -p /tmp/pear \
 RUN docker-php-ext-install zip \
     && php -m | grep zip
 
+# Install bcmath
+RUN docker-php-ext-install bcmath \
+    && php -m | grep bcmath  
+    
 # Install PDO MySQL driver
 RUN docker-php-ext-install pdo_mysql \
     && php -m | grep pdo_mysql
