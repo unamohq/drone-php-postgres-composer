@@ -143,7 +143,7 @@ RUN docker-php-ext-install pdo_mysql \
     && php -m | grep pdo_mysql
 
 # Install PostgreSQL libs
-RUN apk add --no-cache postgresql-dev
+RUN apk add --no-cache postgresql-dev postgresql-client
 
 # Install PDO PostgreSQL driver
 RUN docker-php-ext-install pdo_pgsql \

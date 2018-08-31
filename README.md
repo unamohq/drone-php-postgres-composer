@@ -4,6 +4,7 @@ Based on official php:7.2.6-alpine3.7 image. Extras:
 
 - PDO MySQL driver
 - PDO PostgreSQL driver
+- PostgreSQL client
 - Composer
 - redis extension
 - igbinary extension
