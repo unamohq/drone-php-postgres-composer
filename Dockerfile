@@ -134,6 +134,9 @@ RUN mkdir -p /tmp/pear \
 RUN docker-php-ext-install zip \
     && php -m | grep zip
 
+RUN docker-php-ext-install sockets \
+    && php -m | grep sockets
+
 # Install bcmath
 RUN docker-php-ext-install bcmath \
     && php -m | grep bcmath  
