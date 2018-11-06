@@ -1,6 +1,6 @@
 # drone-php-postgres-composer
 
-Based on official php:7.2.11-alpine3.7 image. Extras:
+Based on official php:7.2.11-alpine3.8 image. Extras:
 
 - PDO MySQL driver
 - PDO PostgreSQL driver
@@ -9,8 +9,8 @@ Based on official php:7.2.11-alpine3.7 image. Extras:
 - redis extension
 - igbinary extension
 - xdebug extension
-- ast extension
 - v8js extension
+- sockets extension
 - MariaDB client
 - Python
 - git

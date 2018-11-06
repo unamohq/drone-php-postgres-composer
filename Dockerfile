@@ -1,4 +1,4 @@
-FROM php:7.2.11-alpine3.7
+FROM php:7.2.11-alpine3.8
 
 LABEL repository.hub="alexmasterov/alpine-libv8:6.8" \
       repository.url="https://github.com/AlexMasterov/dockerfiles" \
@@ -110,12 +110,6 @@ ENV BUILD_DEPS \
 RUN apk update  && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && apk add --no-cache zlib-dev mariadb-client python git
 
-# Install ast
-RUN pecl install ast \
-    && rm -rf /tmp/pear \
-    && docker-php-ext-enable ast \
-    && php -m | grep ast
-
 # Install v8js driver
 RUN mkdir -p /tmp/pear \
     && cd /tmp/pear \
@@ -134,7 +128,10 @@ RUN mkdir -p /tmp/pear \
 RUN docker-php-ext-install zip \
     && php -m | grep zip
 
-RUN docker-php-ext-install sockets \
+# Install sockets
+RUN pecl install sockets \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable sockets \
     && php -m | grep sockets
 
 # Install bcmath
