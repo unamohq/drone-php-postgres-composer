@@ -129,9 +129,7 @@ RUN docker-php-ext-install zip \
     && php -m | grep zip
 
 # Install sockets
-RUN pecl install sockets \
-    && rm -rf /tmp/pear \
-    && docker-php-ext-enable sockets \
+RUN docker-php-ext-install sockets \
     && php -m | grep sockets
 
 # Install bcmath
