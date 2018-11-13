@@ -23,11 +23,13 @@ ARG V8_SOURCE=https://chromium.googlesource.com/v8/v8/+archive/${V8_VERSION}.tar
 ENV V8_VERSION=${V8_VERSION} \
     V8_DIR=${V8_DIR}
 
+RUN apk update
+
 # libbstdc++ for v8js    
-RUN apk add --no-cache libstdc++
+RUN apk add libstdc++
 
 RUN set -x \
-  && apk add --update --virtual .v8-build-dependencies \
+  && apk add --virtual .v8-build-dependencies \
     curl \
     g++ \
     gcc \
@@ -107,15 +109,8 @@ ENV BUILD_DEPS \
                 gcc \
                 make
 
-RUN apk update  && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
+RUN apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && apk add --no-cache zlib-dev mariadb-client python git wget unzip
-
-RUN mkdir /tmp/wait-for-it \
-    && wget https://github.com/vishnubob/wait-for-it/archive/54d1f0bfeb6557adf8a3204455389d0901652242.zip -O wait-for-it.zip \
-    && unzip wait-for-it.zip \
-    && mv wait-for-it-54d1f0bfeb6557adf8a3204455389d0901652242/wait-for-it.sh /bin/wait-for-it \
-    && rm -r /tmp/wait-for-it \
-    && chmod a+x /bin/wait-for-it
 
 # Install v8js driver
 RUN mkdir -p /tmp/pear \
@@ -131,28 +126,11 @@ RUN mkdir -p /tmp/pear \
     && docker-php-ext-enable v8js \
     && php -m | grep v8js
 
-# Install zip
-RUN docker-php-ext-install zip \
-    && php -m | grep zip
-
-# Install sockets
-RUN docker-php-ext-install sockets \
-    && php -m | grep sockets
-
-# Install bcmath
-RUN docker-php-ext-install bcmath \
-    && php -m | grep bcmath  
-    
-# Install PDO MySQL driver
-RUN docker-php-ext-install pdo_mysql \
-    && php -m | grep pdo_mysql
-
 # Install PostgreSQL libs
 RUN apk add --no-cache postgresql-dev postgresql-client
 
-# Install PDO PostgreSQL driver
-RUN docker-php-ext-install pdo_pgsql \
-    && php -m | grep pdo_mysql
+# Install zip sockets bcmath pdo_mysql pdo_pgsql
+RUN docker-php-ext-install zip sockets bcmath pdo_mysql pdo_pgsql
 
 # Install XDebug
 RUN pecl install xdebug \
@@ -185,6 +163,13 @@ WORKDIR /tmp
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
+
+RUN mkdir /tmp/wait-for-it \
+    && wget https://github.com/vishnubob/wait-for-it/archive/54d1f0bfeb6557adf8a3204455389d0901652242.zip -O wait-for-it.zip \
+    && unzip wait-for-it.zip \
+    && mv wait-for-it-54d1f0bfeb6557adf8a3204455389d0901652242/wait-for-it.sh /bin/wait-for-it \
+    && rm -r /tmp/wait-for-it \
+    && chmod a+x /bin/wait-for-it
 
 # Remove builddeps
 RUN apk del .build-deps
