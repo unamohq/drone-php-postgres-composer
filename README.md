@@ -14,3 +14,4 @@ Based on official php:7.2.11-alpine3.8 image. Extras:
 - MariaDB client
 - Python
 - git
+- wait-for-it

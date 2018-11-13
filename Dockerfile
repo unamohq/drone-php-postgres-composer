@@ -108,7 +108,14 @@ ENV BUILD_DEPS \
                 make
 
 RUN apk update  && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
-    && apk add --no-cache zlib-dev mariadb-client python git
+    && apk add --no-cache zlib-dev mariadb-client python git wget unzip
+
+RUN mkdir /tmp/wait-for-it \
+    && wget https://github.com/vishnubob/wait-for-it/archive/54d1f0bfeb6557adf8a3204455389d0901652242.zip -O wait-for-it.zip \
+    && unzip wait-for-it.zip \
+    && mv wait-for-it-54d1f0bfeb6557adf8a3204455389d0901652242/wait-for-it.sh /bin/wait-for-it \
+    && rm -r /tmp/wait-for-it \
+    && chmod a+x /bin/wait-for-it
 
 # Install v8js driver
 RUN mkdir -p /tmp/pear \
@@ -182,5 +189,4 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Remove builddeps
 RUN apk del .build-deps
 
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["php", "-a"]
+VOLUME ["/app"]
